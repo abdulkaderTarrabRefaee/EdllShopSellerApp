@@ -1,6 +1,6 @@
-# sixvalley_vendor_app
+# EDLL SHOP SELLER APP
 
-A new Flutter application.
+
 
 ## Getting Started
 
