@@ -1,7 +1,7 @@
 name: sixvalley_vendor_app
 description: A new Flutter application.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -30,10 +30,11 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   dotted_border: ^2.0.0+1
   flutter_html: ^3.0.0-alpha.2
-  firebase_core: ^1.7.0
-  firebase_messaging: ^11.2.6
+  firebase_core: ^2.4.1
+  firebase_messaging: ^14.2.1
   flutter_local_notifications: ^9.0.0
   path_provider: ^2.0.1
+  url_launcher: ^6.1.7
 
 
 

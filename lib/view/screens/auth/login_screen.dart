@@ -10,6 +10,8 @@ import 'package:sixvalley_vendor_app/view/base/custom_snackbar.dart';
 import 'package:sixvalley_vendor_app/view/base/textfeild/custom_pass_textfeild.dart';
 import 'package:sixvalley_vendor_app/view/base/textfeild/custom_text_feild.dart';
 import 'package:sixvalley_vendor_app/view/screens/dashboard/dashboard_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class SignInWidget extends StatefulWidget {
   @override
@@ -22,6 +24,10 @@ class _SignInWidgetState extends State<SignInWidget> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
   GlobalKey<FormState> _formKeyLogin;
+  final Uri _url = Uri.parse('https://edllshop.com/shop/apply');
+  final Uri _urlTerm = Uri.parse('https://edllshop.com/terms');
+
+
 
   @override
   void initState() {
@@ -84,7 +90,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                   builder: (context, authProvider, child) => InkWell(
                     onTap: () {
                       authProvider.toggleRememberMe();
-                      },
+                    },
                     child: Row(
                       children: [
                         Container(
@@ -97,18 +103,81 @@ class _SignInWidgetState extends State<SignInWidget> {
                               borderRadius: BorderRadius.circular(3)),
                           child: authProvider.isActiveRememberMe ? Icon(Icons.done, color: ColorResources.WHITE, size: 17) : SizedBox.shrink(),
                         ),
+
                         SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                         Text(
                           getTranslated('remember_me', context),
                           style: Theme.of(context)
                               .textTheme.headline2.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
-                        )
+                        ),
+
+
                       ],
+
                     ),
+
                   ),
+
                 ),
               ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_DEFAULT),
 
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text("To become a Seller you must submit an application",
+                              style: TextStyle(fontSize: 12),),
+                            InkWell(
+                              onTap: () async {
+                                if (!await launchUrl(_url)) {
+                                  throw 'Could not launch $_url';
+                                }
+                              }
+
+                              ,
+                              child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(3.5, 0.0, 0.0, 0.0),
+                                    child: Text("Click Here ",style: TextStyle(color:Colors.red),),
+                                  )),
+                            ),
+
+                          ],
+                        ),
+
+                        InkWell(
+                          onTap: () async {
+                            if (!await launchUrl(_urlTerm )) {
+                              throw 'Could not launch $_urlTerm';
+                            }
+                          }
+
+                          ,
+                          child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(1.0,5.0,0,0),
+                                child: Text("Terms and Conditions",style: TextStyle(color:Colors.black54,fontSize: 10),),
+
+                              )),
+                        ),
+
+
+
+
+
+
+                      ],
+
+                    ),
+
+                  ),
+                ],
+              ),
               SizedBox(height: 22),
               Container(
                 margin: EdgeInsets.only(left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_DEFAULT),
@@ -136,35 +205,35 @@ class _SignInWidgetState extends State<SignInWidget> {
               SizedBox(height: 10),
               !authProvider.isLoading
                   ? Container(
-                margin: EdgeInsets.only(left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_DEFAULT),
-                child: CustomButton(
-                  backgroundColor: ColorResources.WHITE,
-                  btnTxt: getTranslated('login', context),
-                  onTap: () async {
-                    String _email = _emailController.text.trim();
-                    String _password = _passwordController.text.trim();
-                    if (_email.isEmpty) {
-                      showCustomSnackBar(getTranslated('enter_email_address', context), context);
-                    }else if (EmailChecker.isNotValid(_email)) {
-                      showCustomSnackBar(getTranslated('enter_valid_email', context), context);
-                    }else if (_password.isEmpty) {
-                      showCustomSnackBar(getTranslated('enter_password', context), context);
-                    }else if (_password.length < 6) {
-                      showCustomSnackBar(getTranslated('password_should_be', context), context);
-                    }else {
-                      authProvider.login(emailAddress: _email, password: _password).then((status) async {
-                        if (status.isSuccess) {
-                          if (authProvider.isActiveRememberMe) {
-                            authProvider.saveUserNumberAndPassword(_email, _password);
-                          } else {
-                            authProvider.clearUserEmailAndPassword();
+                  margin: EdgeInsets.only(left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE, bottom: Dimensions.PADDING_SIZE_DEFAULT),
+                  child: CustomButton(
+                    backgroundColor: ColorResources.WHITE,
+                    btnTxt: getTranslated('login', context),
+                    onTap: () async {
+                      String _email = _emailController.text.trim();
+                      String _password = _passwordController.text.trim();
+                      if (_email.isEmpty) {
+                        showCustomSnackBar(getTranslated('enter_email_address', context), context);
+                      }else if (EmailChecker.isNotValid(_email)) {
+                        showCustomSnackBar(getTranslated('enter_valid_email', context), context);
+                      }else if (_password.isEmpty) {
+                        showCustomSnackBar(getTranslated('enter_password', context), context);
+                      }else if (_password.length < 6) {
+                        showCustomSnackBar(getTranslated('password_should_be', context), context);
+                      }else {
+                        authProvider.login(emailAddress: _email, password: _password).then((status) async {
+                          if (status.isSuccess) {
+                            if (authProvider.isActiveRememberMe) {
+                              authProvider.saveUserNumberAndPassword(_email, _password);
+                            } else {
+                              authProvider.clearUserEmailAndPassword();
+                            }
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => DashboardScreen()));
                           }
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => DashboardScreen()));
-                        }
-                      });
-                    }
-                },
-              )) : Center( child: CircularProgressIndicator( valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        });
+                      }
+                    },
+                  )) : Center( child: CircularProgressIndicator( valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
 
               )),
             ],
@@ -172,5 +241,6 @@ class _SignInWidgetState extends State<SignInWidget> {
         ),
       ),
     );
+
   }
 }

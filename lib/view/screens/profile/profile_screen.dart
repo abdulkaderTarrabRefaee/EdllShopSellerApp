@@ -19,6 +19,9 @@ import 'package:sixvalley_vendor_app/utill/styles.dart';
 import 'package:sixvalley_vendor_app/view/base/custom_button.dart';
 import 'package:sixvalley_vendor_app/view/base/textfeild/custom_text_feild.dart';
 
+import '../../base/custom_dialog.dart';
+import 'DeleteAccountDialog.dart';
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -69,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       updateUserInfoModel.lName = _lastNameController.text ?? "";
       updateUserInfoModel.phone = _phoneController.text ?? '';
 
+
       SellerModel _bank = Provider.of<BankInfoProvider>(context, listen: false).bankInfo;
       SellerBody _sellerBody = SellerBody(
           sMethod: '_put', fName: _firstNameController.text ?? "", lName: _lastNameController.text ?? "", image: updateUserInfoModel.image,
@@ -88,6 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
+
+
 
   @override
   void initState() {
@@ -235,6 +241,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? CustomButton(backgroundColor: ColorResources.WHITE, onTap: _updateUserAccount, btnTxt: getTranslated('update_profile', context))
                           : Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))),
                     ),
+
+                    TextButton(onPressed: () => showAnimatedDialog(context, DeleteAccountDialog(), isFlip: true),child:
+                    Text("Delete my account",style: TextStyle(color: Color.fromARGB(60, 77, 0, 0)),)),
                   ],
                 ),
               ),
